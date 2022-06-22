@@ -28,5 +28,4 @@ class Bot(commands.Bot):
 
 if __name__ == "__main__":
     ewb = Bot()
-    # ewb.run("NzU1ODg0MDU2MTU5MTkxMDUw.X2Jx4g.5u_OBkF3C67kyEtL_5e3_G1oMhs")
     ewb.run(os.environ.get("DISCORD_BOT_TOKEN"))
