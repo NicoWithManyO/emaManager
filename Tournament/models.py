@@ -72,7 +72,6 @@ class PossibleMatchFormat(models.Model):
         self.slug = slugify(f"{self.name}_{self.team_size}_{self.prep_duration}_{self.war_duration}_{self.attack_per_member}")
         super().save(*args, **kwargs)
 
-
 class Tournament(models.Model):
     name = models.CharField(max_length=32, primary_key=True)
     code_name = models.CharField(max_length=4)
@@ -101,3 +100,31 @@ class Tournament(models.Model):
     def __str__(self):
         return self.name
 
+class Match(models.Model):
+    RESULT_CHOICES = [
+        ('win', "Win"),
+        ('lose', 'Lose'),
+        ('tie', 'Tie'),
+    ]
+    tournament = models.ForeignKey('Tournament', on_delete=models.SET_NULL, null=True, blank=True)
+    roster = models.ForeignKey('PossibleRoster', on_delete=models.SET_NULL, null=True, blank=True)
+    for_round = models.IntegerField(default=0)
+    slug = models.SlugField(unique=True, blank=True)
+    
+    home = models.ForeignKey('Team.Team', on_delete=models.SET_NULL, null=True)
+    opponent = models.ForeignKey('Team.Team', related_name="opp", on_delete=models.SET_NULL, null=True, blank=True)
+
+    date = models.DateField(blank=True, null=True)
+    negociated_date = models.DateField(blank=True, null=True)
+
+    is_ended = models.BooleanField(default=False)
+    score = models.CharField(max_length=122, null=True, blank=True)
+    home_result = models.CharField(max_length=5, choices=RESULT_CHOICES, null=True, blank=True)
+    opponent_result = models.CharField(max_length=5, choices=RESULT_CHOICES, null=True, blank=True)
+
+    is_exempt = models.BooleanField(default=False)
+    home_forfeit = models.BooleanField(default=False)
+    opponent_forfeit = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)

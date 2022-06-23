@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PossibleRoster, PossiblePlacementConf, PossibleMatchFormat, Tournament
+from .models import PossibleRoster, PossiblePlacementConf, PossibleMatchFormat, Tournament, Match
 
 # Register your models here.
 @admin.register(Tournament)
@@ -18,3 +18,24 @@ class PossiblePlacementConfAdmin(admin.ModelAdmin):
 @admin.register(PossibleMatchFormat)
 class PossibleMatchFormatAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(Match)
+class MatchAdmin(admin.ModelAdmin):
+    # actions = [check_scores, generate_placement]
+    list_display = [
+        'tournament',
+        'date',
+        'for_round',
+        'home',
+        'score',
+        'opponent',
+        'is_ended',
+    ]
+    list_filter = [
+        'tournament',
+        'roster',
+        'for_round',
+        'date',
+        'is_ended',
+    ]
+    list_display_links = ['date', 'home', 'opponent']
