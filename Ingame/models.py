@@ -30,3 +30,6 @@ class CocClan(models.Model):
             self.clan_level = coc_clan.level
             self.clan_iglink = coc_clan.share_link
         super().save(*args, **kwargs)
+
+class CocWar(models.Model):
+    pass

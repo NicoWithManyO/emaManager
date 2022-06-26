@@ -1,5 +1,10 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from .models import PossibleRoster, PossiblePlacementConf, PossibleMatchFormat, Tournament, Match
+
+from django.conf import settings
+coc_client = settings.COC_CLIENT
+
+from helpers.ingame_utils.ingame import get_warlog
 
 # Register your models here.
 @admin.register(Tournament)
@@ -19,9 +24,24 @@ class PossiblePlacementConfAdmin(admin.ModelAdmin):
 class PossibleMatchFormatAdmin(admin.ModelAdmin):
     pass
 
+@admin.action(description="📥 Recherche les scores (warlog)")
+def check_scores(self, request, queryset):
+    for match in queryset:
+        warlog = coc_client.loop.run_until_complete(get_warlog(match.home.active_clan.tag))
+        for war in warlog:
+            if war.opponent:
+                print(war)
+                if war.opponent.tag == match.opponent.active_clan.tag and war.end_time.raw_time[:8] == str(match.date).replace("-",""):
+                    self.message_user(request, f"{match} : {war.clan.destruction} {war.clan.stars}/{war.opponent.stars} {war.opponent.destruction}", messages.INFO)
+                    score = f"{war.clan.destruction} {war.clan.stars} / {war.opponent.stars} {war.opponent.destruction}"
+                    match.score = score
+                    match.is_ended = True
+                    match.home_result = war.result
+                    match.save()
+
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    # actions = [check_scores, generate_placement]
+    actions = [check_scores, ]
     list_display = [
         'tournament',
         'date',

@@ -128,3 +128,12 @@ class Match(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+
+
+    def save(self, *args, **kwargs):
+        if not self.opponent:
+            self.is_exempt = True
+            self.home_result = "win"
+            self.is_ended = True
+        self.slug = slugify(f"{self.tournament.code_name}_{self.roster}_{self.home}_{self.opponent}_{self.for_round}")
+        super().save(*args, **kwargs)

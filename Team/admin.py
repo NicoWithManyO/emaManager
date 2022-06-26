@@ -38,9 +38,23 @@ def tos(self, request, queryset):
     self.message_user(request, f"{len(all_matchs)} matchs\n{o}", messages.INFO)
     save_tos(all_matchs)
 
+@admin.action(description="✅ Valider la sélection")
+def validate(self, request, queryset):
+    temp = []
+    for _ in queryset:
+        if not _.is_staff_validated:
+            _.is_staff_validated = True
+            _.save()
+            self.message_user(request, f"{_} validée !", messages.INFO)
+        else:
+            temp.append(str(_))
+    if temp:
+        o = f", ".join(temp)
+        self.message_user(request, f"{o} déja validée", messages.INFO)
+
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    actions = [tos, ]
+    actions = [tos, validate]
     list_display = [
         'tournament',
         'registered_for_round',
