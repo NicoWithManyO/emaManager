@@ -32,4 +32,8 @@ class CocClan(models.Model):
         super().save(*args, **kwargs)
 
 class CocWar(models.Model):
-    pass
+    home = models.ForeignKey('Team.Team', on_delete=models.SET_NULL, null=True, blank=True)
+    opponent = models.ForeignKey('Team.Team', related_name="opponent_team",on_delete=models.SET_NULL, null=True, blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)

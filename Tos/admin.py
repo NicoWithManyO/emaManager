@@ -1,7 +1,8 @@
 from django.contrib import admin, messages
 from .models import CurrentTos
 
-from Tournament.models import PossibleRoster, Match
+from Tournament.models import Match
+from TournamentPossibleConf.models import PossibleRoster
 
 # Register your models here.
 @admin.action(description="*!* Valider le Tos")

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'Team',
     'Ingame',
     'Tos',
+    'TournamentPossibleConf',
 ]
 
 MIDDLEWARE = [

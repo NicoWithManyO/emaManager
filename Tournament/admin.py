@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from .models import PossibleRoster, PossiblePlacementConf, PossibleMatchFormat, Tournament, Match
+from .models import Tournament, Match
 
 from django.conf import settings
 coc_client = settings.COC_CLIENT
@@ -11,18 +11,6 @@ from helpers.ingame_utils.ingame import get_warlog
 class TournamentAdmin(admin.ModelAdmin):
     list_display = ['organization_owner', 'is_active', 'name', 'current_season', 'current_round', 'code_name']
     list_display_links = ['name']
-
-@admin.register(PossibleRoster)
-class PossibleRosterAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description']
-
-@admin.register(PossiblePlacementConf)
-class PossiblePlacementConfAdmin(admin.ModelAdmin):
-    pass
-
-@admin.register(PossibleMatchFormat)
-class PossibleMatchFormatAdmin(admin.ModelAdmin):
-    pass
 
 @admin.action(description="📥 Recherche les scores (warlog)")
 def check_scores(self, request, queryset):

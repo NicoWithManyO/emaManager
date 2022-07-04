@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CocClan
+from .models import CocClan, CocWar
 
 from django.utils.html import format_html
 
@@ -14,6 +14,10 @@ from django.utils.html import format_html
 #             self.message_user(request, f"{_} NOK !", messages.ERROR)
 #         else:
 #             pass
+
+@admin.register(CocWar)
+class CocWarAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(CocClan)
 class CocClanAdmin(admin.ModelAdmin):
